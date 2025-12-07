@@ -9,20 +9,29 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
+export type BusPublic = {
+    name: string;
+    id: string;
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
 
 export type ItemCreate = {
-    title: string;
-    description?: (string | null);
+    latitude: number;
+    longitude: number;
+    timestamp: string;
+    bus_name: string;
 };
 
 export type ItemPublic = {
-    title: string;
-    description?: (string | null);
+    latitude: number;
+    longitude: number;
+    timestamp: string;
     id: string;
     owner_id: string;
+    bus_id: string;
 };
 
 export type ItemsPublic = {
@@ -31,8 +40,9 @@ export type ItemsPublic = {
 };
 
 export type ItemUpdate = {
-    title?: (string | null);
-    description?: (string | null);
+    latitude?: (number | null);
+    longitude?: (number | null);
+    timestamp?: (string | null);
 };
 
 export type Message = {
@@ -42,6 +52,11 @@ export type Message = {
 export type NewPassword = {
     token: string;
     new_password: string;
+};
+
+export type PrivateBusCreate = {
+    name: string;
+    is_verified?: boolean;
 };
 
 export type PrivateUserCreate = {
@@ -107,12 +122,20 @@ export type ValidationError = {
     type: string;
 };
 
-export type ItemsReadItemsData = {
+export type ItemsReadItemsByBusData = {
+    busName: string;
     limit?: number;
     skip?: number;
 };
 
-export type ItemsReadItemsResponse = (ItemsPublic);
+export type ItemsReadItemsByBusResponse = (ItemsPublic);
+
+export type ItemsReadUserItemsData = {
+    limit?: number;
+    skip?: number;
+};
+
+export type ItemsReadUserItemsResponse = (ItemsPublic);
 
 export type ItemsCreateItemData = {
     requestBody: ItemCreate;
@@ -170,6 +193,12 @@ export type PrivateCreateUserData = {
 };
 
 export type PrivateCreateUserResponse = (UserPublic);
+
+export type PrivateCreateBusData = {
+    requestBody: PrivateBusCreate;
+};
+
+export type PrivateCreateBusResponse = (BusPublic);
 
 export type UsersReadUsersData = {
     limit?: number;

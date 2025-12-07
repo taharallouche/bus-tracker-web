@@ -55,6 +55,24 @@ export const Body_login_login_access_tokenSchema = {
     title: 'Body_login-login_access_token'
 } as const;
 
+export const BusPublicSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 10,
+            title: 'Name'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        }
+    },
+    type: 'object',
+    required: ['name', 'id'],
+    title: 'BusPublic'
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -71,49 +89,43 @@ export const HTTPValidationErrorSchema = {
 
 export const ItemCreateSchema = {
     properties: {
-        title: {
-            type: 'string',
-            maxLength: 255,
-            minLength: 1,
-            title: 'Title'
+        latitude: {
+            type: 'number',
+            title: 'Latitude'
         },
-        description: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 255
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Description'
+        longitude: {
+            type: 'number',
+            title: 'Longitude'
+        },
+        timestamp: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Timestamp'
+        },
+        bus_name: {
+            type: 'string',
+            title: 'Bus Name'
         }
     },
     type: 'object',
-    required: ['title'],
+    required: ['latitude', 'longitude', 'timestamp', 'bus_name'],
     title: 'ItemCreate'
 } as const;
 
 export const ItemPublicSchema = {
     properties: {
-        title: {
-            type: 'string',
-            maxLength: 255,
-            minLength: 1,
-            title: 'Title'
+        latitude: {
+            type: 'number',
+            title: 'Latitude'
         },
-        description: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 255
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Description'
+        longitude: {
+            type: 'number',
+            title: 'Longitude'
+        },
+        timestamp: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Timestamp'
         },
         id: {
             type: 'string',
@@ -124,39 +136,53 @@ export const ItemPublicSchema = {
             type: 'string',
             format: 'uuid',
             title: 'Owner Id'
+        },
+        bus_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Bus Id'
         }
     },
     type: 'object',
-    required: ['title', 'id', 'owner_id'],
+    required: ['latitude', 'longitude', 'timestamp', 'id', 'owner_id', 'bus_id'],
     title: 'ItemPublic'
 } as const;
 
 export const ItemUpdateSchema = {
     properties: {
-        title: {
+        latitude: {
             anyOf: [
                 {
-                    type: 'string',
-                    maxLength: 255,
-                    minLength: 1
+                    type: 'number'
                 },
                 {
                     type: 'null'
                 }
             ],
-            title: 'Title'
+            title: 'Latitude'
         },
-        description: {
+        longitude: {
             anyOf: [
                 {
-                    type: 'string',
-                    maxLength: 255
+                    type: 'number'
                 },
                 {
                     type: 'null'
                 }
             ],
-            title: 'Description'
+            title: 'Longitude'
+        },
+        timestamp: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Timestamp'
         }
     },
     type: 'object',
@@ -202,7 +228,7 @@ export const NewPasswordSchema = {
         },
         new_password: {
             type: 'string',
-            maxLength: 128,
+            maxLength: 40,
             minLength: 8,
             title: 'New Password'
         }
@@ -210,6 +236,23 @@ export const NewPasswordSchema = {
     type: 'object',
     required: ['token', 'new_password'],
     title: 'NewPassword'
+} as const;
+
+export const PrivateBusCreateSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        is_verified: {
+            type: 'boolean',
+            title: 'Is Verified',
+            default: false
+        }
+    },
+    type: 'object',
+    required: ['name'],
+    title: 'PrivateBusCreate'
 } as const;
 
 export const PrivateUserCreateSchema = {
@@ -258,13 +301,13 @@ export const UpdatePasswordSchema = {
     properties: {
         current_password: {
             type: 'string',
-            maxLength: 128,
+            maxLength: 40,
             minLength: 8,
             title: 'Current Password'
         },
         new_password: {
             type: 'string',
-            maxLength: 128,
+            maxLength: 40,
             minLength: 8,
             title: 'New Password'
         }
@@ -306,7 +349,7 @@ export const UserCreateSchema = {
         },
         password: {
             type: 'string',
-            maxLength: 128,
+            maxLength: 40,
             minLength: 8,
             title: 'Password'
         }
@@ -367,7 +410,7 @@ export const UserRegisterSchema = {
         },
         password: {
             type: 'string',
-            maxLength: 128,
+            maxLength: 40,
             minLength: 8,
             title: 'Password'
         },
@@ -430,7 +473,7 @@ export const UserUpdateSchema = {
             anyOf: [
                 {
                     type: 'string',
-                    maxLength: 128,
+                    maxLength: 40,
                     minLength: 8
                 },
                 {

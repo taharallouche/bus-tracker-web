@@ -3,19 +3,46 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { ItemsReadItemsByBusData, ItemsReadItemsByBusResponse, ItemsReadUserItemsData, ItemsReadUserItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, PrivateCreateBusData, PrivateCreateBusResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class ItemsService {
     /**
-     * Read Items
-     * Retrieve items.
+     * Read Items By Bus
+     * Retrieve items related to a specific bus.
+     * @param data The data for the request.
+     * @param data.busName
+     * @param data.skip
+     * @param data.limit
+     * @returns ItemsPublic Successful Response
+     * @throws ApiError
+     */
+    public static readItemsByBus(data: ItemsReadItemsByBusData): CancelablePromise<ItemsReadItemsByBusResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/items/bus/{bus_name}',
+            path: {
+                bus_name: data.busName
+            },
+            query: {
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Read User Items
+     * Retrieve user items.
      * @param data The data for the request.
      * @param data.skip
      * @param data.limit
      * @returns ItemsPublic Successful Response
      * @throws ApiError
      */
-    public static readItems(data: ItemsReadItemsData = {}): CancelablePromise<ItemsReadItemsResponse> {
+    public static readUserItems(data: ItemsReadUserItemsData = {}): CancelablePromise<ItemsReadUserItemsResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/items/',
@@ -226,6 +253,26 @@ export class PrivateService {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/private/users/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Bus
+     * Create a new bus.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns BusPublic Successful Response
+     * @throws ApiError
+     */
+    public static createBus(data: PrivateCreateBusData): CancelablePromise<PrivateCreateBusResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/private/bus/',
             body: data.requestBody,
             mediaType: 'application/json',
             errors: {
