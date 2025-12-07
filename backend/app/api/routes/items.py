@@ -4,18 +4,48 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from sqlmodel import func, select
 
+from app import crud
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Item, ItemCreate, ItemPublic, ItemsPublic, ItemUpdate, Message
+from app.models import Bus, Item, ItemCreate, ItemPublic, ItemsPublic, ItemUpdate, Message
 
 router = APIRouter(prefix="/items", tags=["items"])
 
 
+@router.get("/bus/{bus_name}", response_model=ItemsPublic)
+def read_items_by_bus(
+    session: SessionDep, current_user: CurrentUser, bus_name: str, skip: int = 0, limit: int = 100
+) -> Any:
+    """
+    Retrieve items related to a specific bus.
+    """
+    bus = session.exec(select(Bus).where(Bus.name == bus_name)).first()
+    if not bus:
+        raise HTTPException(status_code=404, detail="Bus not found")
+    
+    count_statement = (
+        select(func.count())
+        .select_from(Item)
+        .where(Item.bus_id == bus.id)
+    )
+    count = session.exec(count_statement).one()
+    statement = (
+        select(Item)
+        .where(Item.bus_id == bus.id)
+        .order_by(Item.timestamp.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    items = session.exec(statement).all()
+    return ItemsPublic(data=items, count=count)
+
+
+
 @router.get("/", response_model=ItemsPublic)
-def read_items(
+def read_user_items(
     session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100
 ) -> Any:
     """
-    Retrieve items.
+    Retrieve user items.
     """
 
     if current_user.is_superuser:
@@ -23,20 +53,21 @@ def read_items(
         count = session.exec(count_statement).one()
         statement = select(Item).offset(skip).limit(limit)
         items = session.exec(statement).all()
-    else:
-        count_statement = (
-            select(func.count())
-            .select_from(Item)
-            .where(Item.owner_id == current_user.id)
-        )
-        count = session.exec(count_statement).one()
-        statement = (
-            select(Item)
-            .where(Item.owner_id == current_user.id)
-            .offset(skip)
-            .limit(limit)
-        )
-        items = session.exec(statement).all()
+        return ItemsPublic(data=items, count=count)
+    
+    count_statement = (
+        select(func.count())
+        .select_from(Item)
+        .where(Item.owner_id == current_user.id)
+    )
+    count = session.exec(count_statement).one()
+    statement = (
+        select(Item)
+        .where(Item.owner_id == current_user.id)
+        .offset(skip)
+        .limit(limit)
+    )
+    items = session.exec(statement).all()
 
     return ItemsPublic(data=items, count=count)
 
@@ -61,7 +92,9 @@ def create_item(
     """
     Create new item.
     """
-    item = Item.model_validate(item_in, update={"owner_id": current_user.id})
+    item = crud.create_item(session=session, item_in=item_in, owner_id=current_user.id)
+    if item is None:
+        raise HTTPException(status_code=400, detail="Bus not found")
     session.add(item)
     session.commit()
     session.refresh(item)
