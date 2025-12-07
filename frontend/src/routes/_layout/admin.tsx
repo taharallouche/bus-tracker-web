@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { Suspense } from "react"
 
 import { type UserPublic, UsersService } from "@/client"
+import AddBus from "@/components/Admin/AddBus"
 import AddUser from "@/components/Admin/AddUser"
 import { columns, type UserTableData } from "@/components/Admin/columns"
 import { DataTable } from "@/components/Common/DataTable"
@@ -54,10 +55,11 @@ function Admin() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Users</h1>
           <p className="text-muted-foreground">
-            Manage user accounts and permissions
+            Manage users and bus lines
           </p>
         </div>
         <AddUser />
+        <AddBus />
       </div>
       <UsersTable />
     </div>

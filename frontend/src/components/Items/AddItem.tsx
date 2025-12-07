@@ -31,8 +31,8 @@ import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 
 const formSchema = z.object({
-  latitude: z.number().min(-90).max(90, { message: "Latitude must be between -90 and 90" }),
-  longitude: z.number().min(-180).max(180, { message: "Longitude must be between -180 and 180" }),
+  latitude: z.float32().min(-90).max(90, { message: "Latitude must be between -90 and 90" }),
+  longitude: z.float32().min(-180).max(180, { message: "Longitude must be between -180 and 180" }),
   timestamp: z.string().nonempty({ message: "Timestamp is required" }),
   bus_name: z.string().min(1, { message: "Bus name is required" }),
 })
@@ -147,6 +147,8 @@ const AddItem = () => {
                         placeholder="Latitude"
                         type="number"
                         {...field}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                        value={field.value}
                         required
                       />
                     </FormControl>
@@ -168,6 +170,8 @@ const AddItem = () => {
                         placeholder="Longitude"
                         type="number"
                         {...field}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                        value={field.value}
                         required
                       />
                     </FormControl>
