@@ -31,8 +31,10 @@ import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 
 const formSchema = z.object({
-  title: z.string().min(1, { message: "Title is required" }),
-  description: z.string().optional(),
+  latitude: z.number().min(-90).max(90, { message: "Latitude must be between -90 and 90" }),
+  longitude: z.number().min(-180).max(180, { message: "Longitude must be between -180 and 180" }),
+  timestamp: z.string().nonempty({ message: "Timestamp is required" }),
+  bus_name: z.string().min(1, { message: "Bus name is required" }),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -47,8 +49,10 @@ const AddItem = () => {
     mode: "onBlur",
     criteriaMode: "all",
     defaultValues: {
-      title: "",
-      description: "",
+      latitude: 0,
+      longitude: 0,
+      timestamp: "",
+      bus_name: "",
     },
   })
 
@@ -90,15 +94,15 @@ const AddItem = () => {
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
-                name="title"
+                name="bus_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Title <span className="text-destructive">*</span>
+                      Bus Name <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Title"
+                        placeholder="Bus Name"
                         type="text"
                         {...field}
                         required
@@ -111,12 +115,61 @@ const AddItem = () => {
 
               <FormField
                 control={form.control}
-                name="description"
+                name="timestamp"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>
+                      Timestamp <span className="text-destructive">*</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Description" type="text" {...field} />
+                      <Input
+                        placeholder="Timestamp"
+                        type="text"
+                        {...field}
+                        required
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="latitude"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Latitude <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Latitude"
+                        type="number"
+                        {...field}
+                        required
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="longitude"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Longitude <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Longitude"
+                        type="number"
+                        {...field}
+                        required
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

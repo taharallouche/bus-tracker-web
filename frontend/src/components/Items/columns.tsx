@@ -41,14 +41,14 @@ export const columns: ColumnDef<ItemPublic>[] = [
     accessorKey: "title",
     header: "Title",
     cell: ({ row }) => (
-      <span className="font-medium">{row.original.title}</span>
+      <span className="font-medium">{row.original.bus_id}</span>
     ),
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "Timestamp",
+    header: "Timestamp",
     cell: ({ row }) => {
-      const description = row.original.description
+      const description = row.original.timestamp
       return (
         <span
           className={cn(
@@ -56,7 +56,7 @@ export const columns: ColumnDef<ItemPublic>[] = [
             !description && "italic",
           )}
         >
-          {description || "No description"}
+          {description || "No timestamp"}
         </span>
       )
     },
