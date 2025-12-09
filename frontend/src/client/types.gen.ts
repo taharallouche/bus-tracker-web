@@ -122,6 +122,8 @@ export type ValidationError = {
     type: string;
 };
 
+export type BusesReadBusesResponse = (Array<(string)>);
+
 export type ItemsReadItemsByBusData = {
     busName: string;
     limit?: number;
